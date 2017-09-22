@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "auth-api.h"
+
 namespace Ui {
   class MainWindow;
 }
@@ -17,6 +19,7 @@ public:
 
 private:
   Ui::MainWindow *ui;
+  auth_api_t *api;
 };
 
 #endif // MAINWINDOW_HPP
