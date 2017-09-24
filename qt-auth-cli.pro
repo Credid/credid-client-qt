@@ -27,11 +27,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         auth-api.c \
-        MainWindow.cpp
+        MainWindow.cpp \
+        ConnectionDialog.cpp
 
 HEADERS += \
         auth-api.h \
-        MainWindow.hpp
+        MainWindow.hpp \
+        ConnectionDialog.hpp
 
 FORMS += \
+        ConnectionDialog.ui \
         MainWindow.ui
+
+STATECHARTS +=

@@ -4,14 +4,14 @@
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow),
-  api(new auth_api_t)
-{
+  api(new auth_api_t) {
+  coUi = new ConnectionDialog(this);
   ui->setupUi(this);
-//  connect(ui->actionConnect, &QAction::triggered, this, &MyClass::doSomeFunction); // replace last f by something that spawns the menu
+  connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
   delete ui;
+  delete coUi;
   delete api;
 }

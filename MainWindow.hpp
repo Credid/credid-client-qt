@@ -4,13 +4,13 @@
 #include <QMainWindow>
 
 #include "auth-api.h"
+#include "ConnectionDialog.hpp"
 
 namespace Ui {
   class MainWindow;
 }
 
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
   Q_OBJECT
 
 public:
@@ -19,6 +19,7 @@ public:
 
 private:
   Ui::MainWindow *ui;
+  ConnectionDialog *coUi;
   auth_api_t *api;
 };
 
