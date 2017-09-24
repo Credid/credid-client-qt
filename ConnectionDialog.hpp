@@ -2,7 +2,8 @@
 #define CONNECTIONWINDOW_HPP
 
 #include <QDialog>
-#include <QMainWindow>
+
+class MainWindow;
 
 namespace Ui {
   class ConnectionDialog;
@@ -10,11 +11,13 @@ namespace Ui {
 
 class ConnectionDialog : public QDialog {
 public:
-  ConnectionDialog(QMainWindow *mainWindow);
+  ConnectionDialog(MainWindow *mainWindow);
   ~ConnectionDialog();
+  void accept();
 
 private:
   Ui::ConnectionDialog *ui;
+  MainWindow *parent;
 };
 
 #endif // CONNECTIONWINDOW_HPP

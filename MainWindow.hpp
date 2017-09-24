@@ -17,6 +17,8 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
+  void initializeApi(QString host, QString port);
+
 private:
   Ui::MainWindow *ui;
   ConnectionDialog *coUi;
