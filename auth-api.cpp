@@ -28,7 +28,7 @@ void *get_in_addr(struct sockaddr *sa) {
     int numbytes;                                                       \
     if (api->last_command_result != NULL)                               \
       free(api->last_command_result);                                   \
-    api->last_command_result = malloc(MAXDATASIZE);                     \
+    api->last_command_result = (char*)(malloc(MAXDATASIZE));            \
     if (api->last_command_result != NULL) {                             \
       memset(api->last_command_result, 0, MAXDATASIZE);                 \
       if ((numbytes = recv(api->socket, api->last_command_result, MAXDATASIZE-1, 0)) == -1) { \
@@ -149,7 +149,7 @@ auth_api_t *auth_api_init(char const *host, short unsigned int port) {
 
   freeaddrinfo(servinfo); // all done with this structure
 
-  auth_api_t *api = malloc(sizeof(auth_api_t));
+  auth_api_t *api = (auth_api_t*)(malloc(sizeof(auth_api_t)));
   if (api == NULL){
     close(sockfd);
     return NULL;
