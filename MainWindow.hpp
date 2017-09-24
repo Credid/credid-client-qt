@@ -17,7 +17,7 @@ public:
   explicit MainWindow(QWidget *parent = 0);
   ~MainWindow();
 
-  void initializeApi(QString host, QString port);
+  void initializeApi(QString const &host, QString const &port, QString const &username, QString const &password);
 
 private:
   Ui::MainWindow *ui;

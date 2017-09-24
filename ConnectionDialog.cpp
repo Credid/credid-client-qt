@@ -14,6 +14,6 @@ ConnectionDialog::~ConnectionDialog() {
 }
 
 void ConnectionDialog::accept() {
-  parent->initializeApi(ui->lineEdit->text(), ui->lineEdit_2->text());
+  parent->initializeApi(ui->host->text(), ui->port->text(), ui->username->text(), ui->password->text());
   close();
 }
