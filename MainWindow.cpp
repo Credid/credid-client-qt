@@ -190,7 +190,7 @@ void MainWindow::addGroup() {
     ui->newGroup_Name->setText("");
 
     // Update selected user
-    if (ui->listUsers->selectedItems().first() != NULL)
+    if (!ui->listUsers->selectedItems().empty())
       displayUserInfo();
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
@@ -199,7 +199,7 @@ void MainWindow::addGroup() {
     listToDisplay(ui->listGroups);
 
     // Update selected user
-    if (ui->listUsers->selectedItems().first() != NULL)
+    if (!ui->listUsers->selectedItems().empty())
       displayUserInfo();
   }
 }
@@ -211,8 +211,14 @@ void MainWindow::removeGroup() {
     // Refresh list of users : remove them from group
     for (int i = 0; i < ui->listUsers->count(); i++)
       auth_api_user_remove_group(api, ui->listUsers->item(i)->text().toStdString().c_str(), ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+    if (!ui->listUsers->selectedItems().empty())
+      displayUserInfo();
     auth_api_user_list(api);
     listToDisplay(ui->listUsers);
+
+    // Update selected user
+    if (!ui->listUsers->selectedItems().empty())
+      displayUserInfo();
 
     // Update group list
     delete ui->listGroups->selectedItems().first();
