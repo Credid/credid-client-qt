@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
   connect(ui->newUser, &QPushButton::clicked, this, &MainWindow::addUser);
   connect(ui->removeUser, &QPushButton::clicked, this, &MainWindow::removeUser);
+  connect(ui->setPassword, &QPushButton::clicked, this, &MainWindow::changePassword);
 }
 
 MainWindow::~MainWindow() {
@@ -95,6 +96,20 @@ void MainWindow::removeUser() {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
   }
+}
+
+void MainWindow::changePassword() {
+  ui->errorMessage->setText("");
+  auth_api_user_change_password(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->newPassword->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Display OK
+    ui->errorMessage->setText("Password successfully changed");
+    ui->newPassword->setText("");
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+
 }
 
 void MainWindow::listToDisplay(QListWidget *dest) {

@@ -25,6 +25,7 @@ public slots:
   void displayUserInfo();
   void addUser();
   void removeUser();
+  void changePassword();
 
 private:
   Ui::MainWindow *ui;
