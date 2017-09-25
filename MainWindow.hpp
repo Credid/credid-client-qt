@@ -40,6 +40,8 @@ public slots:
   void addGroup();
   void removeGroup();
 
+  void removePermission();
+
 private:
   Ui::MainWindow *ui;
   ConnectionDialog *coUi;

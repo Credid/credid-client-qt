@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
   connect(ui->newGroup, &QPushButton::clicked, this, &MainWindow::addGroup);
   connect(ui->removeGroup, &QPushButton::clicked, this, &MainWindow::removeGroup);
+  connect(ui->removePermission, &QPushButton::clicked, this, &MainWindow::removePermission);
 }
 
 MainWindow::~MainWindow() {
@@ -90,7 +91,7 @@ void MainWindow::displayUserInfo() {
   ui->userGroupSelector->clear();
 
   // Refill lists
-  auth_api_user_list_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
+  auth_api_user_list_groups(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   listToDisplay(ui->listUserGroups);
   std::vector<QString> addedGroups;
   addedGroups.empty();
@@ -225,8 +226,12 @@ void MainWindow::addGroup() {
 }
 
 void MainWindow::removeGroup() {
+  if (ui->listGroups->selectedItems().count() == 0) {
+    ui->errorMessage->setText("Please select a group to delete");
+    return;
+  }
   ui->errorMessage->setText("");
-  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), "");
   if (auth_api_success(api)) {
     // Refresh list of users : remove them from group
     for (int i = 0; i < ui->listUsers->count(); i++)
@@ -244,6 +249,24 @@ void MainWindow::removeGroup() {
     delete ui->listGroups->selectedItems().first();
   } else {
     // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+}
+
+void MainWindow::removePermission() {
+  if (ui->listGroups->selectedItems().count() == 0 || ui->listGroupPermissions->selectedItems().count() == 0) {
+    ui->errorMessage->setText("Please select a group and a permission");
+    return;
+  }
+  ui->errorMessage->setText("");
+  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), ui->listGroupPermissions->selectedItems().first()->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update permissions display
+    delete ui->listGroupPermissions->selectedItems().first();
+
+    // Update permissions display for selected user
+    displayUserInfo();
+  } else {
     ui->errorMessage->setText(auth_api_last_result(api));
   }
 }

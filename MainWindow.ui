@@ -27,7 +27,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabUsers">
      <attribute name="title">
@@ -296,6 +296,13 @@
           <widget class="QPushButton" name="removeGroup">
            <property name="text">
             <string>Delete group</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removePermission">
+           <property name="text">
+            <string>Remove perm</string>
            </property>
           </widget>
          </item>
