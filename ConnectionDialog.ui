@@ -51,6 +51,9 @@
      <height>21</height>
     </rect>
    </property>
+   <property name="text">
+    <string>127.0.0.1</string>
+   </property>
   </widget>
   <widget class="QLineEdit" name="port">
    <property name="geometry">
@@ -60,6 +63,9 @@
      <width>81</width>
      <height>21</height>
     </rect>
+   </property>
+   <property name="text">
+    <string>8999</string>
    </property>
   </widget>
   <widget class="QLabel" name="label">

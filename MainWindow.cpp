@@ -190,7 +190,8 @@ void MainWindow::addGroup() {
     ui->newGroup_Name->setText("");
 
     // Update selected user
-    displayUserInfo();
+    if (ui->listUsers->selectedItems().first() != NULL)
+      displayUserInfo();
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
     auth_api_group_list(api);
@@ -198,7 +199,8 @@ void MainWindow::addGroup() {
     listToDisplay(ui->listGroups);
 
     // Update selected user
-    displayUserInfo();
+    if (ui->listUsers->selectedItems().first() != NULL)
+      displayUserInfo();
   }
 }
 
@@ -223,25 +225,15 @@ void MainWindow::removeGroup() {
 void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
   if (clear)
     dest->clear();
-  char *result = auth_api_last_result(api);
-  char *buffer = strtok(result, "\"");
-  int i = 0;
-  QString tmp;
-  while (buffer != NULL) {
-    buffer = strtok(NULL, "\"");
-    if (buffer != NULL) {
-      // If the first char is a { then the object to display is a tuple
-      if (result[0] == '{' && i % 2 == 0) {
-        tmp = buffer;
-      } else if (result[0] == '{' && i % 2 == 1) {
-        tmp += " => ";
-        tmp += buffer;
-        dest->addItem(tmp);
-      } else {
-        dest->addItem(buffer);
-      }
-    }
-    buffer = strtok(NULL, "\"");
-    i++;
+  QString result = auth_api_last_result(api);
+  QStringList resultList = result.split("\"");
+  for (QStringList::iterator it = resultList.begin(); it != resultList.end(); it++) {
+    it++;
+    if (it == resultList.end())
+      return;
+    if (result[0] == '{')
+      dest->addItem(*it + " => " + *(it += 2));
+    else
+      dest->addItem(*it);
   }
 }
