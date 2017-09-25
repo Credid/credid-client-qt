@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabUsers">
      <attribute name="title">
@@ -41,10 +41,23 @@
       </property>
       <layout class="QHBoxLayout" name="layoutUsers">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0">
          <property name="spacing">
           <number>0</number>
          </property>
+         <item>
+          <spacer name="verticalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
          <item>
           <widget class="QComboBox" name="userGroupSelector"/>
          </item>
@@ -62,22 +75,53 @@
            </property>
           </widget>
          </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
         </layout>
        </item>
        <item>
-        <widget class="QListWidget" name="listUsers"/>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>Users list</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="listUsers"/>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QVBoxLayout" name="layoutUsersActions">
          <item>
           <widget class="QLabel" name="username">
            <property name="text">
-            <string>Username</string>
+            <string>Selected user's groups</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QListWidget" name="listUserGroups"/>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Selected user's permissions</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QListWidget" name="listUserPermissions"/>
@@ -102,14 +146,69 @@
       </property>
       <layout class="QHBoxLayout" name="layoutGroups">
        <item>
-        <widget class="QListWidget" name="listGroups"/>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <spacer name="verticalSpacer_3">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addGroupPerm">
+           <property name="text">
+            <string>Add perm</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeGroupPerm">
+           <property name="text">
+            <string>Remove perm</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="verticalSpacer_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="text">
+            <string>Groups list</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QListWidget" name="listGroups"/>
+         </item>
+        </layout>
        </item>
        <item>
         <layout class="QVBoxLayout" name="layoutGroupsActions">
          <item>
           <widget class="QLabel" name="groupname">
            <property name="text">
-            <string>GroupName</string>
+            <string>Groups permissions</string>
            </property>
           </widget>
          </item>
