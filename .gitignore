@@ -1,2 +1,6 @@
 /build*
 *.user
+/qt-auth-cli
+moc_*
+ui_*
+.qmake.stash
