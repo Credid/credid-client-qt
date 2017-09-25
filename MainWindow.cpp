@@ -196,7 +196,15 @@ void MainWindow::addGroup() {
   ui->errorMessage->setText("");
   auth_api_group_add(api, ui->newGroup_Name->text().toStdString().c_str(), ui->newGroup_Permission->text().toStdString().c_str(), ui->newGroup_Resource->text().toStdString().c_str());
   if (auth_api_success(api)) {
-    // Update group list
+    // Update selected user
+    if (!ui->listUsers->selectedItems().empty())
+      displayUserInfo();
+
+    // Update selected group
+    if (!ui->listGroups->selectedItems().empty() && ui->newGroup_Name->text().toStdString() == ui->listGroups->selectedItems().first()->text().toStdString())
+      ui->listGroupPermissions->addItem(ui->newGroup_Resource->text() + " => " + ui->newGroup_Permission->text());
+
+    // Update "group add" interface
     ui->newGroup_Permission->setText("");
     ui->newGroup_Resource->setText("");
 
@@ -209,10 +217,6 @@ void MainWindow::addGroup() {
     }
     ui->listGroups->addItem(ui->newGroup_Name->text());
     ui->newGroup_Name->setText("");
-
-    // Update selected user
-    if (!ui->listUsers->selectedItems().empty())
-      displayUserInfo();
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
     auth_api_group_list(api);
@@ -226,7 +230,7 @@ void MainWindow::addGroup() {
 }
 
 void MainWindow::removeGroup() {
-  if (ui->listGroups->selectedItems().count() == 0) {
+  if (ui->listGroups->selectedItems().empty()) {
     ui->errorMessage->setText("Please select a group to delete");
     return;
   }
@@ -247,6 +251,7 @@ void MainWindow::removeGroup() {
 
     // Update group list
     delete ui->listGroups->selectedItems().first();
+    ui->listGroupPermissions->clear();
   } else {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
@@ -259,7 +264,7 @@ void MainWindow::removePermission() {
     return;
   }
   ui->errorMessage->setText("");
-  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), ui->listGroupPermissions->selectedItems().first()->text().toStdString().c_str());
+  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), ui->listGroupPermissions->selectedItems().first()->text().split(" => ").first().toStdString().c_str());
   if (auth_api_success(api)) {
     // Update permissions display
     delete ui->listGroupPermissions->selectedItems().first();
