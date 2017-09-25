@@ -22,6 +22,8 @@ public:
   void listToDisplay(QListWidget *dest, bool clear = true);
 
 public slots:
+  void disconnect();
+
   // Users
   void displayUserInfo();
 

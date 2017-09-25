@@ -8,7 +8,10 @@ MainWindow::MainWindow(QWidget *parent) :
   ui(new Ui::MainWindow) {
   coUi = new ConnectionDialog(this);
   ui->setupUi(this);
+  ui->connectedMessage->setText("Disconnected.");
+
   connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
+  connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnect);
 
   // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
@@ -71,6 +74,15 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Enable UI
   ui->tabWidget->setEnabled(true);
   ui->connectedMessage->setText("Connected to " + host + ":" + port);
+}
+
+void MainWindow::disconnect() {
+  if (api != NULL) {
+    auth_api_free(api);
+    api = NULL;
+  }
+  ui->tabWidget->setEnabled(false);
+  ui->connectedMessage->setText("Disconnected.");
 }
 
 void MainWindow::displayUserInfo() {
