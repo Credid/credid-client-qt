@@ -225,9 +225,9 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QLineEdit" name="newGroup_Resource">
+          <widget class="QLineEdit" name="newGroup_Name">
            <property name="text">
-            <string>Resource</string>
+            <string>Name</string>
            </property>
           </widget>
          </item>
@@ -239,9 +239,9 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="newGroup_Name">
+          <widget class="QLineEdit" name="newGroup_Resource">
            <property name="text">
-            <string>Name</string>
+            <string>Resource</string>
            </property>
           </widget>
          </item>

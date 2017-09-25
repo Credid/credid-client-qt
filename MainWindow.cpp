@@ -169,8 +169,16 @@ void MainWindow::displayGroupInfo() {
 
 void MainWindow::addGroup() {
   ui->errorMessage->setText("");
-  auth_api_group_add(api, ui->newGroupName->text().toStdString().c_str(), );
-
+  auth_api_group_add(api, ui->newGroup_Name->text().toStdString().c_str(), ui->newGroup_Permission->text().toStdString().c_str(), ui->newGroup_Resource->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update group list
+    ui->listGroups->addItem(ui->newGroup_Name->text());
+    ui->newGroup_Name->setText("");
+    ui->newGroup_Permission->setText("");
+    ui->newGroup_Resource->setText("");
+  } else {
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
 }
 
 void MainWindow::removeGroup() {
@@ -178,7 +186,7 @@ void MainWindow::removeGroup() {
   auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
   if (auth_api_success(api)) {
     // Update group list
-    delete ui->listGroups->selectedItems().first()->text().toStdString().c_str();
+    delete ui->listGroups->selectedItems().first();
 
     // Refresh list of users
     auth_api_user_list(api);
