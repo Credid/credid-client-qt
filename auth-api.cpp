@@ -98,7 +98,7 @@ int auth_api_user_remove_group(auth_api_t *api, char const *username, char const
 }
 
 int auth_api_user_list_group(auth_api_t *api, char const *username) {
-  return auth_api_send("USER LIST GROUP : %s", username);
+  return auth_api_send("USER LIST GROUPS : %s", username);
 }
 
 int auth_api_user_change_password(auth_api_t *api, char const *username, char const *newpassword) {

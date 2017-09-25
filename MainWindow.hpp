@@ -2,6 +2,7 @@
 #define MAINWINDOW_HPP
 
 #include <QMainWindow>
+#include <QListWidget>
 
 #include "auth-api.h"
 #include "ConnectionDialog.hpp"
@@ -18,6 +19,10 @@ public:
   ~MainWindow();
 
   void initializeApi(QString const &host, QString const &port, QString const &username, QString const &password);
+  void listToDisplay(QListWidget *dest);
+
+public slots:
+  void displayUserInfo();
 
 private:
   Ui::MainWindow *ui;

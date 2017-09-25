@@ -41,6 +41,30 @@
       </property>
       <layout class="QHBoxLayout" name="layoutUsers">
        <item>
+        <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QComboBox" name="userGroupSelector"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addGroup">
+           <property name="text">
+            <string>Add group</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeGroup">
+           <property name="text">
+            <string>Remove grp</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="QListWidget" name="listUsers"/>
        </item>
        <item>
@@ -61,19 +85,6 @@
         </layout>
        </item>
       </layout>
-     </widget>
-     <widget class="QLabel" name="errorMessage">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>300</y>
-        <width>631</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
      </widget>
     </widget>
     <widget class="QWidget" name="tabGroups">
@@ -110,6 +121,19 @@
       </layout>
      </widget>
     </widget>
+   </widget>
+   <widget class="QLabel" name="errorMessage">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>651</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
   coUi = new ConnectionDialog(this);
   ui->setupUi(this);
   connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
+  connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
 }
 
 MainWindow::~MainWindow() {
@@ -43,21 +44,32 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
 
   // Request list of users
   auth_api_user_list(api);
-  char *users = auth_api_last_result(api);
-  char *buffer = strtok(users, "\"");
-  while (buffer != NULL) {
-    buffer = strtok(NULL, "\"");
-    ui->listUsers->addItem(buffer);
-    buffer = strtok(NULL, "\"");
-  }
+  listToDisplay(ui->listUsers);
 
   // Request list of groups
   auth_api_group_list(api);
-  char *groups = auth_api_last_result(api);
-  buffer = strtok(groups, "\"");
+  listToDisplay(ui->listGroups);
+}
+
+void MainWindow::displayUserInfo() {
+  auth_api_user_list_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
+  listToDisplay(ui->listUserGroups);
+  std::vector<QWidget*> addedGroups;
+  for (int i = 0; i < ui->listGroups->count(); i++) {
+    QWidget *w = ui->listUserGroups->find(i);
+    if (std::find(addedGroups.begin(), addedGroups.end(), w) != addedGroups.end()) {
+      ui->userGroupSelector->addItem(ui->listGroups->item(i)->text());
+      addedGroups.push_back(w);
+    }
+  }
+}
+
+void MainWindow::listToDisplay(QListWidget *dest) {
+  char *result = auth_api_last_result(api);
+  char *buffer = strtok(result, "\"");
   while (buffer != NULL) {
     buffer = strtok(NULL, "\"");
-    ui->listGroups->addItem(buffer);
+    dest->addItem(buffer);
     buffer = strtok(NULL, "\"");
   }
 }
