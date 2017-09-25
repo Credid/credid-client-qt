@@ -22,10 +22,15 @@ public:
   void listToDisplay(QListWidget *dest);
 
 public slots:
+  // Users
   void displayUserInfo();
+
   void addUser();
   void removeUser();
   void changePassword();
+
+  void addUserGroup();
+  void removeUserGroup();
 
 private:
   Ui::MainWindow *ui;

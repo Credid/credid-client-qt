@@ -96,14 +96,14 @@
           <widget class="QComboBox" name="userGroupSelector"/>
          </item>
          <item>
-          <widget class="QPushButton" name="addGroup">
+          <widget class="QPushButton" name="addUserGroup">
            <property name="text">
             <string>Add group</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="removeGroup">
+          <widget class="QPushButton" name="removeUserGroup">
            <property name="text">
             <string>Remove group</string>
            </property>

@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->newUser, &QPushButton::clicked, this, &MainWindow::addUser);
   connect(ui->removeUser, &QPushButton::clicked, this, &MainWindow::removeUser);
   connect(ui->setPassword, &QPushButton::clicked, this, &MainWindow::changePassword);
+
+  connect(ui->addUserGroup, &QPushButton::clicked, this, &MainWindow::addUserGroup);
+  connect(ui->removeUserGroup, &QPushButton::clicked, this, &MainWindow::removeUserGroup);
 }
 
 MainWindow::~MainWindow() {
@@ -56,18 +59,24 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
 }
 
 void MainWindow::displayUserInfo() {
-  // Empty list
+  // Empty lists
   ui->listUserGroups->clear();
+  ui->userGroupSelector->clear();
 
-  // Refill list
+  // Refill lists
   auth_api_user_list_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   listToDisplay(ui->listUserGroups);
-  std::vector<QWidget*> addedGroups;
+  std::vector<QString> addedGroups;
+  addedGroups.empty();
+  // Only display in the "add group" box the groups the user is not in
+  for (int i = 0; i < ui->listUserGroups->count(); i++) {
+    addedGroups.push_back(ui->listUserGroups->item(i)->text());
+  }
+
   for (int i = 0; i < ui->listGroups->count(); i++) {
-    QWidget *w = ui->listUserGroups->find(i);
-    if (std::find(addedGroups.begin(), addedGroups.end(), w) != addedGroups.end()) {
-      ui->userGroupSelector->addItem(ui->listGroups->item(i)->text());
-      addedGroups.push_back(w);
+    QString s = ui->listGroups->item(i)->text();
+    if (std::find(addedGroups.begin(), addedGroups.end(), s) == addedGroups.end()) {
+      ui->userGroupSelector->addItem(s);
     }
   }
 }
@@ -109,6 +118,22 @@ void MainWindow::changePassword() {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
   }
+}
+
+void MainWindow::addUserGroup() {
+  ui->errorMessage->setText("");
+  auth_api_user_add_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->userGroupSelector->currentText().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update group list
+    ui->listUserGroups->addItem(ui->userGroupSelector->currentText());
+    ui->userGroupSelector->removeItem(ui->userGroupSelector->currentIndex());
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+}
+
+void MainWindow::removeUserGroup() {
 
 }
 
