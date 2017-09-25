@@ -23,6 +23,7 @@ public:
 
 public slots:
   void displayUserInfo();
+  void addUser();
 
 private:
   Ui::MainWindow *ui;

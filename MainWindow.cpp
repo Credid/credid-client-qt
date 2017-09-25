@@ -9,7 +9,10 @@ MainWindow::MainWindow(QWidget *parent) :
   coUi = new ConnectionDialog(this);
   ui->setupUi(this);
   connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
+
+  // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
+  connect(ui->newUser, &QPushButton::clicked, this, &MainWindow::addUser);
 }
 
 MainWindow::~MainWindow() {
@@ -17,7 +20,6 @@ MainWindow::~MainWindow() {
   delete coUi;
   if (api != NULL) {
     auth_api_free(api);
-//    delete api;
   }
 }
 
@@ -52,6 +54,10 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
 }
 
 void MainWindow::displayUserInfo() {
+  // Empty list
+  ui->listUserGroups->clear();
+
+  // Refill list
   auth_api_user_list_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   listToDisplay(ui->listUserGroups);
   std::vector<QWidget*> addedGroups;
@@ -64,12 +70,27 @@ void MainWindow::displayUserInfo() {
   }
 }
 
+void MainWindow::addUser() {
+  ui->errorMessage->setText("");
+  auth_api_user_add(api, ui->newUser_Name->text().toStdString().c_str(), ui->newUser_Password->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Display new user in list
+    ui->listUsers->addItem(ui->newUser_Name->text());
+    ui->newUser_Name->setText("");
+    ui->newUser_Password->setText("");
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+}
+
 void MainWindow::listToDisplay(QListWidget *dest) {
   char *result = auth_api_last_result(api);
   char *buffer = strtok(result, "\"");
   while (buffer != NULL) {
     buffer = strtok(NULL, "\"");
-    dest->addItem(buffer);
+    if (buffer != NULL)
+      dest->addItem(buffer);
     buffer = strtok(NULL, "\"");
   }
 }
