@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>465</height>
+    <height>450</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>16</x>
       <y>29</y>
       <width>651</width>
-      <height>371</height>
+      <height>331</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -60,6 +60,9 @@
          </item>
          <item>
           <widget class="QLineEdit" name="newUser_Name">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New user name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Name</string>
            </property>
@@ -67,6 +70,9 @@
          </item>
          <item>
           <widget class="QLineEdit" name="newUser_Password">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New user password&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Password</string>
            </property>
@@ -123,7 +129,11 @@
           </spacer>
          </item>
          <item>
-          <widget class="QLineEdit" name="newPassword"/>
+          <widget class="QLineEdit" name="newPassword">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New password&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="setPassword">
@@ -218,7 +228,7 @@
         <x>10</x>
         <y>10</y>
         <width>631</width>
-        <height>331</height>
+        <height>281</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="layoutGroups">
@@ -226,22 +236,31 @@
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
           <widget class="QLineEdit" name="newGroup_Name">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
             <string>Name</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="newGroup_Permission">
+          <widget class="QLineEdit" name="newGroup_Resource">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group resource&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
-            <string>Permission</string>
+            <string>Resource</string>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="newGroup_Resource">
+          <widget class="QLineEdit" name="newGroup_Permission">
+           <property name="toolTip">
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group permission&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
            <property name="text">
-            <string>Resource</string>
+            <string>Permission</string>
            </property>
           </widget>
          </item>
@@ -256,41 +275,6 @@
           <widget class="QPushButton" name="removeGroup">
            <property name="text">
             <string>Delete group</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Line" name="line">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="newPermission_Resource">
-           <property name="text">
-            <string>Resource</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="newPermission_Permission">
-           <property name="text">
-            <string>Permission</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="newPermission">
-           <property name="text">
-            <string>Add permission</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="removePermission">
-           <property name="text">
-            <string>Delete permission</string>
            </property>
           </widget>
          </item>
@@ -332,7 +316,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>10</y>
+      <y>370</y>
       <width>651</width>
       <height>20</height>
      </rect>
