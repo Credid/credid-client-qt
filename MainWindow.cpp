@@ -134,7 +134,16 @@ void MainWindow::addUserGroup() {
 }
 
 void MainWindow::removeUserGroup() {
-
+  ui->errorMessage->setText("");
+  auth_api_user_remove_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->listUserGroups->selectedItems().first()->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update group list
+    ui->userGroupSelector->addItem(ui->listUserGroups->selectedItems().first()->text());
+    delete ui->listUserGroups->selectedItems().first();
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
 }
 
 void MainWindow::listToDisplay(QListWidget *dest) {

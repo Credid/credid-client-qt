@@ -35,10 +35,10 @@ int auth_api_group_remove(auth_api_t *api, char const *group);
 int auth_api_group_list_perms(auth_api_t *api, char const *group);
 int auth_api_group_get_perm(auth_api_t *api, char const *group, char const *resource);
 
-/* DONE */int auth_api_user_list(auth_api_t *api);
-/* DONE */int auth_api_user_add(auth_api_t *api, char const *username, char const *password);
-/* DONE */int auth_api_user_remove(auth_api_t *api, char const *username);
-/* DONE */int auth_api_user_add_group(auth_api_t *api, char const *username, char const *group);
+int auth_api_user_list(auth_api_t *api);
+int auth_api_user_add(auth_api_t *api, char const *username, char const *password);
+int auth_api_user_remove(auth_api_t *api, char const *username);
+int auth_api_user_add_group(auth_api_t *api, char const *username, char const *group);
 int auth_api_user_remove_group(auth_api_t *api, char const *username, char const *group);
-/* DONE */int auth_api_user_list_group(auth_api_t *api, char const *username);
-/* DONE */int auth_api_user_change_password(auth_api_t *api, char const *username, char const *newpassword);
+int auth_api_user_list_group(auth_api_t *api, char const *username);
+int auth_api_user_change_password(auth_api_t *api, char const *username, char const *newpassword);
