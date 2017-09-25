@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
   // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
   connect(ui->newUser, &QPushButton::clicked, this, &MainWindow::addUser);
+  connect(ui->removeUser, &QPushButton::clicked, this, &MainWindow::removeUser);
 }
 
 MainWindow::~MainWindow() {
@@ -74,10 +75,22 @@ void MainWindow::addUser() {
   ui->errorMessage->setText("");
   auth_api_user_add(api, ui->newUser_Name->text().toStdString().c_str(), ui->newUser_Password->text().toStdString().c_str());
   if (auth_api_success(api)) {
-    // Display new user in list
+    // Update user list
     ui->listUsers->addItem(ui->newUser_Name->text());
     ui->newUser_Name->setText("");
     ui->newUser_Password->setText("");
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+}
+
+void MainWindow::removeUser() {
+  ui->errorMessage->setText("");
+  auth_api_user_remove(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update user list
+    delete ui->listUsers->selectedItems().first();
   } else {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
