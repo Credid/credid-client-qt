@@ -73,7 +73,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   listToDisplay(ui->listGroups);
 
   // Enable UI
-  ui->tabWidget->setEnabled(true);
+  ui->centralWidget->setEnabled(true);
   ui->connectedMessage->setText("Connected to " + host + ":" + port);
 }
 
