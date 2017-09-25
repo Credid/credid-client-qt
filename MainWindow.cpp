@@ -59,6 +59,10 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Request list of users
   auth_api_user_list(api);
   listToDisplay(ui->listUsers);
+  if (ui->listUsers->count() > 0) {
+    ui->listUsers->item(0)->setSelected(true);
+    displayUserInfo();
+  }
 
   // Request list of groups
   auth_api_group_list(api);
