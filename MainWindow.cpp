@@ -176,10 +176,18 @@ void MainWindow::addGroup() {
   auth_api_group_add(api, ui->newGroup_Name->text().toStdString().c_str(), ui->newGroup_Permission->text().toStdString().c_str(), ui->newGroup_Resource->text().toStdString().c_str());
   if (auth_api_success(api)) {
     // Update group list
-    ui->listGroups->addItem(ui->newGroup_Name->text());
-    ui->newGroup_Name->setText("");
     ui->newGroup_Permission->setText("");
     ui->newGroup_Resource->setText("");
+
+    // Handle case where the group already exists
+    for (int i = 0; i < ui->listGroups->count(); i++) {
+      if (ui->listGroups->item(i)->text() == ui->newGroup_Name->text()) {
+        ui->newGroup_Name->setText("");
+        return;
+      }
+    }
+    ui->listGroups->addItem(ui->newGroup_Name->text());
+    ui->newGroup_Name->setText("");
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
     auth_api_group_list(api);
