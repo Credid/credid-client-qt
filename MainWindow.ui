@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tabUsers">
      <attribute name="title">
@@ -64,7 +64,10 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New user name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Name</string>
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>User name</string>
            </property>
           </widget>
          </item>
@@ -74,6 +77,9 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New user password&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
             <string>Password</string>
            </property>
           </widget>
@@ -132,6 +138,9 @@
           <widget class="QLineEdit" name="newPassword">
            <property name="toolTip">
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;New password&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="placeholderText">
+            <string>New password</string>
            </property>
           </widget>
          </item>
@@ -240,7 +249,10 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group name&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Name</string>
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>Group name</string>
            </property>
           </widget>
          </item>
@@ -250,7 +262,10 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group resource&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
-            <string>Resource</string>
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>Resource(s)</string>
            </property>
           </widget>
          </item>
@@ -260,6 +275,9 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Group permission&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
             <string>Permission</string>
            </property>
           </widget>
