@@ -75,8 +75,12 @@ void MainWindow::displayUserInfo() {
   std::vector<QString> addedGroups;
   addedGroups.empty();
   // Only display in the "add group" box the groups the user is not in
+  ui->listUserPermissions->clear();
   for (int i = 0; i < ui->listUserGroups->count(); i++) {
     addedGroups.push_back(ui->listUserGroups->item(i)->text());
+    // Put perms in user's perms list
+    auth_api_group_list_perms(api, ui->listUserGroups->item(i)->text().toStdString().c_str());
+    listToDisplay(ui->listUserPermissions, false);
   }
 
   for (int i = 0; i < ui->listGroups->count(); i++) {
@@ -178,6 +182,9 @@ void MainWindow::addGroup() {
     ui->newGroup_Resource->setText("");
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
+    auth_api_group_list(api);
+    ui->listGroups->clear();
+    listToDisplay(ui->listGroups);
   }
 }
 
@@ -185,20 +192,23 @@ void MainWindow::removeGroup() {
   ui->errorMessage->setText("");
   auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
   if (auth_api_success(api)) {
-    // Update group list
-    delete ui->listGroups->selectedItems().first();
-
-    // Refresh list of users
+    // Refresh list of users : remove them from group
+    for (int i = 0; i < ui->listUsers->count(); i++)
+      auth_api_user_remove_group(api, ui->listUsers->item(i)->text().toStdString().c_str(), ui->listGroups->selectedItems().first()->text().toStdString().c_str());
     auth_api_user_list(api);
     listToDisplay(ui->listUsers);
+
+    // Update group list
+    delete ui->listGroups->selectedItems().first();
   } else {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
   }
 }
 
-void MainWindow::listToDisplay(QListWidget *dest) {
-  dest->clear();
+void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
+  if (clear)
+    dest->clear();
   char *result = auth_api_last_result(api);
   char *buffer = strtok(result, "\"");
   while (buffer != NULL) {
