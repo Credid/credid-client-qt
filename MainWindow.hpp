@@ -32,6 +32,12 @@ public slots:
   void addUserGroup();
   void removeUserGroup();
 
+  // Groups
+  void displayGroupInfo();
+
+  void addGroup();
+  void removeGroup();
+
 private:
   Ui::MainWindow *ui;
   ConnectionDialog *coUi;

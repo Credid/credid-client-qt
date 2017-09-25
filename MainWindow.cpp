@@ -12,12 +12,19 @@ MainWindow::MainWindow(QWidget *parent) :
 
   // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
+
   connect(ui->newUser, &QPushButton::clicked, this, &MainWindow::addUser);
   connect(ui->removeUser, &QPushButton::clicked, this, &MainWindow::removeUser);
   connect(ui->setPassword, &QPushButton::clicked, this, &MainWindow::changePassword);
 
   connect(ui->addUserGroup, &QPushButton::clicked, this, &MainWindow::addUserGroup);
   connect(ui->removeUserGroup, &QPushButton::clicked, this, &MainWindow::removeUserGroup);
+
+  // Group pannel buttons
+  connect(ui->listGroups, &QListWidget::clicked, this, &MainWindow::displayGroupInfo);
+
+  connect(ui->newGroup, &QPushButton::clicked, this, &MainWindow::addGroup);
+  connect(ui->removeGroup, &QPushButton::clicked, this, &MainWindow::removeGroup);
 }
 
 MainWindow::~MainWindow() {
@@ -144,6 +151,30 @@ void MainWindow::removeUserGroup() {
     // Display error message
     ui->errorMessage->setText(auth_api_last_result(api));
   }
+}
+
+/* Groups management functions */
+
+void MainWindow::displayGroupInfo() {
+  ui->errorMessage->setText("");
+  ui->listGroupPermissions->clear();
+
+  auth_api_group_list_perms(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update group list
+    listToDisplay(ui->listGroupPermissions);
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
+}
+
+void MainWindow::addGroup() {
+
+}
+
+void MainWindow::removeGroup() {
+
 }
 
 void MainWindow::listToDisplay(QListWidget *dest) {

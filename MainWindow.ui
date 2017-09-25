@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tabUsers">
      <attribute name="title">
@@ -225,6 +225,23 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
+          <widget class="QLineEdit" name="newGroupName"/>
+         </item>
+         <item>
+          <widget class="QPushButton" name="newGroup">
+           <property name="text">
+            <string>Create group</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeGroup">
+           <property name="text">
+            <string>Delete group</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="verticalSpacer_3">
            <property name="orientation">
             <enum>Qt::Vertical</enum>
@@ -285,7 +302,7 @@
          <item>
           <widget class="QLabel" name="groupname">
            <property name="text">
-            <string>Groups permissions</string>
+            <string>Selected group's permissions</string>
            </property>
           </widget>
          </item>
