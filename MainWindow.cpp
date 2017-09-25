@@ -63,6 +63,10 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Request list of groups
   auth_api_group_list(api);
   listToDisplay(ui->listGroups);
+
+  // Enable UI
+  ui->tabWidget->setEnabled(true);
+  ui->connectedMessage->setText("Connected to " + host + ":" + port);
 }
 
 void MainWindow::displayUserInfo() {
