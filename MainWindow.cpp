@@ -285,8 +285,12 @@ void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
     it++;
     if (it == resultList.end())
       return;
-    if (result[0] == '{')
-      dest->addItem(*it + " => " + *(it += 2));
+    if (result[0] == '{') {
+      QString tmp = *it + " => ";
+      it += 2;
+      tmp += *it;
+      dest->addItem(tmp);
+    }
     else
       dest->addItem(*it);
   }
