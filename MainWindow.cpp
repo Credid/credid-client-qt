@@ -188,11 +188,17 @@ void MainWindow::addGroup() {
     }
     ui->listGroups->addItem(ui->newGroup_Name->text());
     ui->newGroup_Name->setText("");
+
+    // Update selected user
+    displayUserInfo();
   } else {
     ui->errorMessage->setText(auth_api_last_result(api));
     auth_api_group_list(api);
     ui->listGroups->clear();
     listToDisplay(ui->listGroups);
+
+    // Update selected user
+    displayUserInfo();
   }
 }
 
