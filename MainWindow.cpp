@@ -219,10 +219,23 @@ void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
     dest->clear();
   char *result = auth_api_last_result(api);
   char *buffer = strtok(result, "\"");
+  int i = 0;
+  QString tmp;
   while (buffer != NULL) {
     buffer = strtok(NULL, "\"");
-    if (buffer != NULL)
-      dest->addItem(buffer);
+    if (buffer != NULL) {
+      // If the first char is a { then the object to display is a tuple
+      if (result[0] == '{' && i % 2 == 0) {
+        tmp = buffer;
+      } else if (result[0] == '{' && i % 2 == 1) {
+        tmp += " => ";
+        tmp += buffer;
+        dest->addItem(tmp);
+      } else {
+        dest->addItem(buffer);
+      }
+    }
     buffer = strtok(NULL, "\"");
+    i++;
   }
 }
