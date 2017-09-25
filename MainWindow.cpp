@@ -67,7 +67,6 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
 
 void MainWindow::displayUserInfo() {
   // Empty lists
-  ui->listUserGroups->clear();
   ui->userGroupSelector->clear();
 
   // Refill lists
@@ -157,7 +156,6 @@ void MainWindow::removeUserGroup() {
 
 void MainWindow::displayGroupInfo() {
   ui->errorMessage->setText("");
-  ui->listGroupPermissions->clear();
 
   auth_api_group_list_perms(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
   if (auth_api_success(api)) {
@@ -170,14 +168,29 @@ void MainWindow::displayGroupInfo() {
 }
 
 void MainWindow::addGroup() {
+  ui->errorMessage->setText("");
+  auth_api_group_add(api, ui->newGroupName->text().toStdString().c_str(), );
 
 }
 
 void MainWindow::removeGroup() {
+  ui->errorMessage->setText("");
+  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+  if (auth_api_success(api)) {
+    // Update group list
+    delete ui->listGroups->selectedItems().first()->text().toStdString().c_str();
 
+    // Refresh list of users
+    auth_api_user_list(api);
+    listToDisplay(ui->listUsers);
+  } else {
+    // Display error message
+    ui->errorMessage->setText(auth_api_last_result(api));
+  }
 }
 
 void MainWindow::listToDisplay(QListWidget *dest) {
+  dest->clear();
   char *result = auth_api_last_result(api);
   char *buffer = strtok(result, "\"");
   while (buffer != NULL) {

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>413</height>
+    <height>465</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>16</x>
       <y>29</y>
       <width>651</width>
-      <height>321</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -218,14 +218,32 @@
         <x>10</x>
         <y>10</y>
         <width>631</width>
-        <height>281</height>
+        <height>331</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="layoutGroups">
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_5">
          <item>
-          <widget class="QLineEdit" name="newGroupName"/>
+          <widget class="QLineEdit" name="newGroup_Resource">
+           <property name="text">
+            <string>Resource</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="newGroup_Permission">
+           <property name="text">
+            <string>Permission</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="newGroup_Name">
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="newGroup">
@@ -242,44 +260,39 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_3">
+          <widget class="Line" name="line">
            <property name="orientation">
-            <enum>Qt::Vertical</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="addGroupPerm">
-           <property name="text">
-            <string>Add perm</string>
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
          <item>
-          <widget class="QPushButton" name="removeGroupPerm">
+          <widget class="QLineEdit" name="newPermission_Resource">
            <property name="text">
-            <string>Remove perm</string>
+            <string>Resource</string>
            </property>
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Vertical</enum>
+          <widget class="QLineEdit" name="newPermission_Permission">
+           <property name="text">
+            <string>Permission</string>
            </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>20</width>
-             <height>40</height>
-            </size>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="newPermission">
+           <property name="text">
+            <string>Add permission</string>
            </property>
-          </spacer>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removePermission">
+           <property name="text">
+            <string>Delete permission</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

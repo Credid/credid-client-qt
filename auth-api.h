@@ -32,7 +32,7 @@ int auth_api_user_has_access_to(auth_api_t *api, char const *perm, char const *r
 int auth_api_group_add(auth_api_t *api, char const *group, char const *perm, char const *resource);
 int auth_api_group_remove(auth_api_t *api, char const *group);
 /* DONE */int auth_api_group_list(auth_api_t *api);
-int auth_api_group_list_perms(auth_api_t *api, char const *group);
+/* DONE */int auth_api_group_list_perms(auth_api_t *api, char const *group);
 int auth_api_group_get_perm(auth_api_t *api, char const *group, char const *resource);
 
 int auth_api_user_list(auth_api_t *api);
