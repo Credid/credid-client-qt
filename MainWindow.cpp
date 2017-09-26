@@ -84,6 +84,12 @@ void MainWindow::disconnect() {
   }
   ui->tabWidget->setEnabled(false);
   ui->connectedMessage->setText("Disconnected.");
+
+  // Clear UI
+  for (auto widget: ui->centralWidget->findChildren<QListWidget*>())
+    widget->clear();
+  for (auto widget: ui->centralWidget->findChildren<QLineEdit*>())
+    widget->clear();
 }
 
 void MainWindow::displayUserInfo() {
