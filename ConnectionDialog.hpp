@@ -13,9 +13,11 @@ class ConnectionDialog : public QDialog {
 public:
   ConnectionDialog(MainWindow *mainWindow);
   ~ConnectionDialog();
-  void accept();
+  void displayFavorite(QString const &host = "", QString const &port = "", QString const &username = "");
 
 public slots:
+  void connectToServer();
+
   void fillFavorite();
   void addFavorite();
   void removeFavorite();
