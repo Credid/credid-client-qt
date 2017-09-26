@@ -377,8 +377,8 @@
     <property name="title">
      <string>&amp;Help</string>
     </property>
-    <addaction name="actionRead_the_RFC"/>
-    <addaction name="actionAccess_the_wiki"/>
+    <addaction name="actionRFC"/>
+    <addaction name="actionWiki"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -392,29 +392,44 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionRead_the_RFC">
+  <action name="actionRFC">
    <property name="text">
     <string>Read the RFC</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
+   </property>
   </action>
-  <action name="actionAccess_the_wiki">
+  <action name="actionWiki">
    <property name="text">
     <string>Access the wiki</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+H</string>
    </property>
   </action>
   <action name="actionConnect">
    <property name="text">
     <string>Connect</string>
    </property>
+   <property name="shortcut">
+    <string>Alt+O</string>
+   </property>
   </action>
   <action name="actionQuit">
    <property name="text">
     <string>Quit</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
   </action>
   <action name="actionDisconnect">
    <property name="text">
     <string>Disconnect</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+D</string>
    </property>
   </action>
  </widget>

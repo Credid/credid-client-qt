@@ -1,6 +1,7 @@
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
-#include <iostream>
+#include <QDesktopServices>
+#include <QUrl>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,8 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
   ui->setupUi(this);
   ui->connectedMessage->setText("Disconnected.");
 
+  // Connect menu buttons
   connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
   connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnect);
+  connect(ui->actionRFC, &QAction::triggered, this, &MainWindow::openRFC);
+  connect(ui->actionWiki, &QAction::triggered, this, &MainWindow::openWiki);
 
   // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
@@ -90,6 +94,16 @@ void MainWindow::disconnect() {
     widget->clear();
   for (auto widget: ui->centralWidget->findChildren<QLineEdit*>())
     widget->clear();
+}
+
+void MainWindow::openRFC() {
+  QString link = "https://auth.sceptique.eu/v1.html";
+  QDesktopServices::openUrl(QUrl(link));
+}
+
+void MainWindow::openWiki() {
+  QString link = "https://github.com/AuthCr/qt-auth-api/wiki";
+  QDesktopServices::openUrl(QUrl(link));
 }
 
 void MainWindow::displayUserInfo() {

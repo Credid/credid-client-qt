@@ -22,6 +22,8 @@ public:
   void listToDisplay(QListWidget *dest, bool clear = true);
 
 public slots:
+  void openWiki();
+  void openRFC();
   void disconnect();
 
   // Users
