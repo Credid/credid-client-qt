@@ -75,6 +75,10 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Request list of groups
   auth_api_group_list(api);
   listToDisplay(ui->listGroups);
+  if (ui->listGroups->count() > 0) {
+    ui->listGroups->item(0)->setSelected(true);
+    displayGroupInfo();
+  }
 
   // Enable UI
   ui->centralWidget->setEnabled(true);
