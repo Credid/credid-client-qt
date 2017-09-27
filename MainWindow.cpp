@@ -16,6 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
   connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnect);
   connect(ui->actionRFC, &QAction::triggered, this, &MainWindow::openRFC);
   connect(ui->actionWiki, &QAction::triggered, this, &MainWindow::openWiki);
+  connect(ui->actionQuit, &QAction::triggered, this, &MainWindow::close);
 
   // Connect users pannel buttons
   connect(ui->listUsers, &QListWidget::clicked, this, &MainWindow::displayUserInfo);
