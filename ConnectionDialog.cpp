@@ -19,8 +19,11 @@ ConnectionDialog::ConnectionDialog(MainWindow *mainWindow) :
   connect(ui->favAdd, &QPushButton::clicked, this, &ConnectionDialog::addFavorite);
   connect(ui->favRemove, &QPushButton::clicked, this, &ConnectionDialog::removeFavorite);
 
+  // Check that the favorites folder exists
+  if (!QDir(QDir::homePath() + "/.local").exists())
+    QDir().mkdir(QDir::homePath() + "/.local");
   // Open save file and fill with first favorite
-  QFile saveFile(QDir::currentPath() + "favorites.csv");
+  QFile saveFile(QDir::homePath() + "/.local/favorites.csv");
   if (!saveFile.open(QIODevice::ReadOnly | QIODevice::Text))
     return;
   QTextStream in(&saveFile);
@@ -62,7 +65,7 @@ void ConnectionDialog::addFavorite() {
   // Add in save file
   QString toAdd = ui->host->text() + "," + ui->port->text() + "," + ui->username->text() + "\n";
 
-  QFile saveFile(QDir::currentPath() + "favorites.csv");
+  QFile saveFile(QDir::homePath() + "/.local/favorites.csv");
   if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
     // Create file
     if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Text))
@@ -85,7 +88,7 @@ void ConnectionDialog::removeFavorite() {
   // Remove from save file
   QString toErase = ui->favList->selectedItems().first()->text() + "," + ui->favList->selectedItems().at(1)->text() + "," + ui->favList->selectedItems().back()->text();
 
-  QFile saveFile(QDir::currentPath() + "favorites.csv");
+  QFile saveFile(QDir::homePath() + "/.local/favorites.csv");
   if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text))
     return;
 
