@@ -86,7 +86,7 @@ void MainWindow::disconnect() {
     auth_api_free(api);
     api = NULL;
   }
-  ui->tabWidget->setEnabled(false);
+  ui->centralWidget->setEnabled(false);
   ui->connectedMessage->setText("Disconnected.");
 
   // Clear UI
