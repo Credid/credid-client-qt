@@ -23,18 +23,21 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        auth-api.cpp \
+        credid-api.cpp \
+        LogsWindow.cpp \
         main.cpp \
         MainWindow.cpp \
         ConnectionDialog.cpp \
 
 HEADERS += \
-        auth-api.h \
+        credid-api.h \
         MainWindow.hpp \
-        ConnectionDialog.hpp
+        ConnectionDialog.hpp \
+        LogsWindow.hpp
 
 FORMS += \
         ConnectionDialog.ui \
-        MainWindow.ui
+        MainWindow.ui \
+        LogsWindow.ui \
 
 STATECHARTS +=

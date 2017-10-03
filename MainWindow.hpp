@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QListWidget>
 
-#include "auth-api.h"
+#include "credid-api.h"
 #include "ConnectionDialog.hpp"
+#include "LogsWindow.hpp"
 
 namespace Ui {
   class MainWindow;
@@ -20,6 +21,8 @@ public:
 
   void initializeApi(QString const &host, QString const &port, QString const &username, QString const &password);
   void listToDisplay(QListWidget *dest, bool clear = true);
+
+  void addLog(bool userOp = false);
 
 public slots:
   void openWiki();
@@ -47,7 +50,8 @@ public slots:
 private:
   Ui::MainWindow *ui;
   ConnectionDialog *coUi;
-  auth_api_t *api;
+  LogsWindow *logsUi;
+  credid_api_t *api;
 };
 
 #endif // MAINWINDOW_HPP

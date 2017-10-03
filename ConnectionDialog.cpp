@@ -19,7 +19,7 @@ ConnectionDialog::ConnectionDialog(MainWindow *mainWindow) :
   connect(ui->favAdd, &QPushButton::clicked, this, &ConnectionDialog::addFavorite);
   connect(ui->favRemove, &QPushButton::clicked, this, &ConnectionDialog::removeFavorite);
 
-  // Check that the favorites folder exists
+  // Check that the favorites folder exists, else create it
   if (!QDir(QDir::homePath() + "/.local").exists())
     QDir().mkdir(QDir::homePath() + "/.local");
   // Open save file and fill with first favorite

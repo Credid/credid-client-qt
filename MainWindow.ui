@@ -380,7 +380,14 @@
     <addaction name="actionRFC"/>
     <addaction name="actionWiki"/>
    </widget>
+   <widget class="QMenu" name="menuLogs">
+    <property name="title">
+     <string>Logs</string>
+    </property>
+    <addaction name="actionOpen_logs"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuLogs"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
@@ -430,6 +437,14 @@
    </property>
    <property name="shortcut">
     <string>Alt+D</string>
+   </property>
+  </action>
+  <action name="actionOpen_logs">
+   <property name="text">
+    <string>See logs</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+L</string>
    </property>
   </action>
  </widget>

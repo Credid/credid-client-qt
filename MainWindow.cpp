@@ -1,18 +1,24 @@
-#include "MainWindow.hpp"
-#include "ui_MainWindow.h"
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDate>
+#include <QTime>
+#include <QDir>
+#include <QTextStream>
 
+#include "MainWindow.hpp"
+#include "ui_MainWindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
   QMainWindow(parent),
   ui(new Ui::MainWindow) {
   coUi = new ConnectionDialog(this);
+  logsUi = new LogsWindow(this);
   ui->setupUi(this);
   ui->connectedMessage->setText("Disconnected.");
 
   // Connect menu buttons
   connect(ui->actionConnect, SIGNAL(triggered()), coUi, SLOT(exec()));
+  connect(ui->actionOpen_logs, SIGNAL(triggered()), logsUi, SLOT(exec()));
   connect(ui->actionDisconnect, &QAction::triggered, this, &MainWindow::disconnect);
   connect(ui->actionRFC, &QAction::triggered, this, &MainWindow::openRFC);
   connect(ui->actionWiki, &QAction::triggered, this, &MainWindow::openWiki);
@@ -40,25 +46,29 @@ MainWindow::~MainWindow() {
   delete ui;
   delete coUi;
   if (api != NULL) {
-    auth_api_free(api);
+    credid_api_free(api);
   }
 }
 
 void MainWindow::initializeApi(QString const &host, QString const &port, QString const &username, QString const &password) {
   // Connect to the server
-  api = auth_api_init(host.toStdString().c_str(), port.toInt());
+  api = credid_api_init(host.toStdString().c_str(), port.toInt());
   if (api == NULL) {
     ui->errorMessage->setText("Could not connect to the server.");
+//    addLog("Could not connect to the server.");
+    addLog();
     return;
   } else {
     ui->errorMessage->setText("");
   }
 
-  // Authenticate
-  auth_api_auth(api, username.toStdString().c_str(), password.toStdString().c_str());
-  if (!auth_api_success(api)) {
-    ui->errorMessage->setText("Authentication failed: invalid username and/or password");
-    auth_api_free(api);
+  // credidenticate
+  credid_api_auth(api, username.toStdString().c_str(), password.toStdString().c_str());
+  if (!credid_api_success(api)) {
+    ui->errorMessage->setText("credidentication failed: invalid username and/or password");
+    addLog();
+//    addLog("credidentication failed: invalid username and/or password");
+    credid_api_free(api);
     api = NULL;
     return;
   } else {
@@ -66,7 +76,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   }
 
   // Request list of users
-  auth_api_user_list(api);
+  credid_api_user_list(api);
   listToDisplay(ui->listUsers);
   if (ui->listUsers->count() > 0) {
     ui->listUsers->item(0)->setSelected(true);
@@ -74,7 +84,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   }
 
   // Request list of groups
-  auth_api_group_list(api);
+  credid_api_group_list(api);
   listToDisplay(ui->listGroups);
   if (ui->listGroups->count() > 0) {
     ui->listGroups->item(0)->setSelected(true);
@@ -84,30 +94,33 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Enable UI
   ui->centralWidget->setEnabled(true);
   ui->connectedMessage->setText("Connected to " + host + ":" + port);
+  addLog();
 }
 
 void MainWindow::disconnect() {
   if (api != NULL) {
-    auth_api_free(api);
+    credid_api_free(api);
     api = NULL;
   }
   ui->centralWidget->setEnabled(false);
   ui->connectedMessage->setText("Disconnected.");
+  addLog("Disconnected from server");
 
   // Clear UI
   for (auto widget: ui->centralWidget->findChildren<QListWidget*>())
     widget->clear();
   for (auto widget: ui->centralWidget->findChildren<QLineEdit*>())
     widget->clear();
+  addLog();
 }
 
 void MainWindow::openRFC() {
-  QString link = "https://auth.sceptique.eu/v1.html";
+  QString link = "https://credid.sceptique.eu/v1.html";
   QDesktopServices::openUrl(QUrl(link));
 }
 
 void MainWindow::openWiki() {
-  QString link = "https://github.com/AuthCr/qt-auth-api/wiki";
+  QString link = "https://github.com/credidCr/qt-credid-api/wiki";
   QDesktopServices::openUrl(QUrl(link));
 }
 
@@ -116,7 +129,7 @@ void MainWindow::displayUserInfo() {
   ui->userGroupSelector->clear();
 
   // Refill lists
-  auth_api_user_list_groups(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
+  credid_api_user_list_groups(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   listToDisplay(ui->listUserGroups);
   std::vector<QString> addedGroups;
   addedGroups.empty();
@@ -125,7 +138,7 @@ void MainWindow::displayUserInfo() {
   for (int i = 0; i < ui->listUserGroups->count(); i++) {
     addedGroups.push_back(ui->listUserGroups->item(i)->text());
     // Put perms in user's perms list
-    auth_api_group_list_perms(api, ui->listUserGroups->item(i)->text().toStdString().c_str());
+    credid_api_group_list_perms(api, ui->listUserGroups->item(i)->text().toStdString().c_str());
     listToDisplay(ui->listUserPermissions, false);
   }
 
@@ -135,71 +148,78 @@ void MainWindow::displayUserInfo() {
       ui->userGroupSelector->addItem(s);
     }
   }
+  addLog();
 }
 
 void MainWindow::addUser() {
   ui->errorMessage->setText("");
-  auth_api_user_add(api, ui->newUser_Name->text().toStdString().c_str(), ui->newUser_Password->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_user_add(api, ui->newUser_Name->text().toStdString().c_str(), ui->newUser_Password->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update user list
     ui->listUsers->addItem(ui->newUser_Name->text());
     ui->newUser_Name->setText("");
     ui->newUser_Password->setText("");
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    QString log = credid_api_last_result(api);
+    ui->errorMessage->setText(log);
   }
+  addLog();
 }
 
 void MainWindow::removeUser() {
   ui->errorMessage->setText("");
-  auth_api_user_remove(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_user_remove(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update user list
     delete ui->listUsers->selectedItems().first();
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::changePassword() {
   ui->errorMessage->setText("");
-  auth_api_user_change_password(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->newPassword->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_user_change_password(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->newPassword->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Display OK
     ui->errorMessage->setText("Password successfully changed");
     ui->newPassword->setText("");
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::addUserGroup() {
   ui->errorMessage->setText("");
-  auth_api_user_add_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->userGroupSelector->currentText().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_user_add_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->userGroupSelector->currentText().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update group list
     ui->listUserGroups->addItem(ui->userGroupSelector->currentText());
     ui->userGroupSelector->removeItem(ui->userGroupSelector->currentIndex());
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::removeUserGroup() {
   ui->errorMessage->setText("");
-  auth_api_user_remove_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->listUserGroups->selectedItems().first()->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_user_remove_group(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->listUserGroups->selectedItems().first()->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update group list
     ui->userGroupSelector->addItem(ui->listUserGroups->selectedItems().first()->text());
     delete ui->listUserGroups->selectedItems().first();
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 /* Groups management functions */
@@ -207,20 +227,21 @@ void MainWindow::removeUserGroup() {
 void MainWindow::displayGroupInfo() {
   ui->errorMessage->setText("");
 
-  auth_api_group_list_perms(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_group_list_perms(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update group list
     listToDisplay(ui->listGroupPermissions);
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::addGroup() {
   ui->errorMessage->setText("");
-  auth_api_group_add(api, ui->newGroup_Name->text().toStdString().c_str(), ui->newGroup_Permission->text().toStdString().c_str(), ui->newGroup_Resource->text().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_group_add(api, ui->newGroup_Name->text().toStdString().c_str(), ui->newGroup_Permission->text().toStdString().c_str(), ui->newGroup_Resource->text().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update selected user
     if (!ui->listUsers->selectedItems().empty())
       displayUserInfo();
@@ -243,8 +264,8 @@ void MainWindow::addGroup() {
     ui->listGroups->addItem(ui->newGroup_Name->text());
     ui->newGroup_Name->setText("");
   } else {
-    ui->errorMessage->setText(auth_api_last_result(api));
-    auth_api_group_list(api);
+    ui->errorMessage->setText(credid_api_last_result(api));
+    credid_api_group_list(api);
     ui->listGroups->clear();
     listToDisplay(ui->listGroups);
 
@@ -252,6 +273,7 @@ void MainWindow::addGroup() {
     if (!ui->listUsers->selectedItems().empty())
       displayUserInfo();
   }
+  addLog();
 }
 
 void MainWindow::removeGroup() {
@@ -260,14 +282,14 @@ void MainWindow::removeGroup() {
     return;
   }
   ui->errorMessage->setText("");
-  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), "");
-  if (auth_api_success(api)) {
+  credid_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), "");
+  if (credid_api_success(api)) {
     // Refresh list of users : remove them from group
     for (int i = 0; i < ui->listUsers->count(); i++)
-      auth_api_user_remove_group(api, ui->listUsers->item(i)->text().toStdString().c_str(), ui->listGroups->selectedItems().first()->text().toStdString().c_str());
+      credid_api_user_remove_group(api, ui->listUsers->item(i)->text().toStdString().c_str(), ui->listGroups->selectedItems().first()->text().toStdString().c_str());
     if (!ui->listUsers->selectedItems().empty())
       displayUserInfo();
-    auth_api_user_list(api);
+    credid_api_user_list(api);
     listToDisplay(ui->listUsers);
 
     // Update selected user
@@ -279,8 +301,9 @@ void MainWindow::removeGroup() {
     ui->listGroupPermissions->clear();
   } else {
     // Display error message
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::removePermission() {
@@ -289,22 +312,23 @@ void MainWindow::removePermission() {
     return;
   }
   ui->errorMessage->setText("");
-  auth_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), ui->listGroupPermissions->selectedItems().first()->text().split(" => ").first().toStdString().c_str());
-  if (auth_api_success(api)) {
+  credid_api_group_remove(api, ui->listGroups->selectedItems().first()->text().toStdString().c_str(), ui->listGroupPermissions->selectedItems().first()->text().split(" => ").first().toStdString().c_str());
+  if (credid_api_success(api)) {
     // Update permissions display
     delete ui->listGroupPermissions->selectedItems().first();
 
     // Update permissions display for selected user
     displayUserInfo();
   } else {
-    ui->errorMessage->setText(auth_api_last_result(api));
+    ui->errorMessage->setText(credid_api_last_result(api));
   }
+  addLog();
 }
 
 void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
   if (clear)
     dest->clear();
-  QString result = auth_api_last_result(api);
+  QString result = credid_api_last_result(api);
   QStringList resultList = result.split("\"");
   for (QStringList::iterator it = resultList.begin(); it != resultList.end(); it++) {
     it++;
@@ -319,4 +343,32 @@ void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
     else
       dest->addItem(*it);
   }
+}
+
+void MainWindow::addLog(bool userOp) {
+//  QFile saveFile(QDir::homePath() + "/.local/logs");
+//  if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
+//    // Create file
+//    if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Text))
+//      return;
+//  }
+
+//  std::string log;
+//  while ((log = credid_api_fetch_log(api)) != NULL) {
+//    QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] " + log;
+
+//    logsUi->getAllLogs()->addItem(toAdd);
+//    if (!userOp)
+//      logsUi->getLogs()->addItem(toAdd);
+
+//    // Add in log file
+//    QTextStream out(&saveFile);
+//    while (!out.atEnd()) {
+//      QString line = out.readLine();
+//      if (line == toAdd) // Avoid duplicates
+//        return;
+//    }
+//    out << toAdd;
+//  }
+//  saveFile.close();
 }
