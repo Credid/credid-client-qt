@@ -5,6 +5,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QInputDialog>
 
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
@@ -185,8 +186,13 @@ void MainWindow::removeUser() {
 }
 
 void MainWindow::changePassword() {
-  if (QMessageBox::question( this, "Change user password", "Are you sure you want to change this user's password?", QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Cancel)
+  QString pw = QInputDialog::getText(this, "Change user password", "Enter the new password again", QLineEdit::Password, "");
+  if (pw != ui->newPassword->text()) {
+    addLog(true, "Tried to change password but passwords mismatch");
+    ui->errorMessage->setText("The two passwords don't match, please try again.");
     return;
+  }
+
   ui->errorMessage->setText("");
   credid_api_user_change_password(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->newPassword->text().toStdString().c_str());
   if (credid_api_success(api)) {
