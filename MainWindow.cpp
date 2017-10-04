@@ -186,8 +186,12 @@ void MainWindow::removeUser() {
   addLog();
 }
 
+#include <iostream>
 void MainWindow::changePassword() {
-  QString pw = QInputDialog::getText(this, "Change user password", "Enter the new password again", QLineEdit::Password, "");
+  bool ok;
+  QString pw = QInputDialog::getText(this, "Change user password", "Enter the new password again", QLineEdit::Password, "", &ok);
+  if (!ok)
+    return;
   if (pw != ui->newPassword->text()) {
     addLog(true, "Tried to change password but passwords mismatch");
     ui->errorMessage->setText("The two passwords don't match, please try again.");
