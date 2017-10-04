@@ -66,8 +66,8 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // authenticate
   credid_api_auth(api, username.toStdString().c_str(), password.toStdString().c_str());
   if (!credid_api_success(api)) {
-    ui->errorMessage->setText("credidentication failed: invalid username and/or password");
-    addLog(false, "credidentication failed: invalid username and/or password");
+    ui->errorMessage->setText("Authentication failed: invalid username and/or password");
+    addLog(false, "Authentication failed: invalid username and/or password");
     credid_api_free(api);
     api = NULL;
     return;
@@ -101,6 +101,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
 
 void MainWindow::disconnect() {
   if (api != NULL) {
+    addLog("Disconnected from the server.");
     credid_api_free(api);
     api = NULL;
   }
@@ -371,9 +372,16 @@ void MainWindow::addLog(bool userOp, std::string const &logPhrase) {
   credid_api_log_t *log;
   while ((log = credid_api_fetch_log(api)) != NULL) {
     QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] ";
-    if (log->status)
+    if (log->status) {
       toAdd += "[ERROR] ";
-    toAdd += log->query;
+      toAdd += log->query;
+      toAdd += " (";
+      toAdd += credid_api_last_result(api);
+      toAdd += ")";
+    }
+    else
+      toAdd += log->query;
+    toAdd.remove('\n');
 
     logsUi->getAllLogs()->addItem(toAdd);
     if (!userOp)
@@ -384,6 +392,15 @@ void MainWindow::addLog(bool userOp, std::string const &logPhrase) {
     while (!out.atEnd())
       out.readLine();
     out << toAdd;
+
+    // Handle disconnection case
+    if (QString(credid_api_last_result(api)) == "not connected : failure\n") {
+      disconnect();
+      free(log->query);
+      free(log);
+      return;
+    }
+
     free(log->query);
     free(log);
   }
