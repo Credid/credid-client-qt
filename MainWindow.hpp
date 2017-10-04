@@ -22,7 +22,7 @@ public:
   void initializeApi(QString const &host, QString const &port, QString const &username, QString const &password);
   void listToDisplay(QListWidget *dest, bool clear = true);
 
-  void addLog(bool userOp = false);
+  void addLog(bool userOp = false, std::string const &logPhrase = "");
 
 public slots:
   void openWiki();

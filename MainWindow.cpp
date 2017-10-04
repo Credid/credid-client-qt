@@ -56,8 +56,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   api = credid_api_init(host.toStdString().c_str(), port.toInt());
   if (api == NULL) {
     ui->errorMessage->setText("Could not connect to the server.");
-//    addLog("Could not connect to the server.");
-    addLog();
+    addLog(false, "Could not connect to the server.");
     return;
   } else {
     ui->errorMessage->setText("");
@@ -67,8 +66,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   credid_api_auth(api, username.toStdString().c_str(), password.toStdString().c_str());
   if (!credid_api_success(api)) {
     ui->errorMessage->setText("credidentication failed: invalid username and/or password");
-    addLog();
-//    addLog("credidentication failed: invalid username and/or password");
+    addLog(false, "credidentication failed: invalid username and/or password");
     credid_api_free(api);
     api = NULL;
     return;
@@ -97,7 +95,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
   // Enable UI
   ui->centralWidget->setEnabled(true);
   ui->connectedMessage->setText("Connected to " + host + ":" + port);
-  addLog();
+  addLog(false, "Connected to " + host.toStdString() + ":" + port.toStdString());
 }
 
 void MainWindow::disconnect() {
@@ -107,14 +105,12 @@ void MainWindow::disconnect() {
   }
   ui->centralWidget->setEnabled(false);
   ui->connectedMessage->setText("Disconnected.");
-  addLog("Disconnected from server");
 
   // Clear UI
   for (auto widget: ui->centralWidget->findChildren<QListWidget*>())
     widget->clear();
   for (auto widget: ui->centralWidget->findChildren<QLineEdit*>())
     widget->clear();
-  addLog();
 }
 
 void MainWindow::openRFC() {
@@ -354,7 +350,7 @@ void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
   }
 }
 
-void MainWindow::addLog(bool userOp) {
+void MainWindow::addLog(bool userOp, std::string const &logPhrase) {
   QFile saveFile(QDir::homePath() + "/.local/logs");
   if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
     // Create file
@@ -375,14 +371,23 @@ void MainWindow::addLog(bool userOp) {
 
     // Add in log file
     QTextStream out(&saveFile);
-    while (!out.atEnd()) {
-      QString line = out.readLine();
-      if (line == toAdd) // Avoid duplicates
-        return;
-    }
+    while (!out.atEnd())
+      out.readLine();
     out << toAdd;
     free(log->query);
     free(log);
+  }
+  if (logPhrase != "") {
+    QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] " + logPhrase.c_str();
+    logsUi->getAllLogs()->addItem(toAdd);
+    if (!userOp)
+      logsUi->getLogs()->addItem(toAdd);
+
+    // Add in log file
+    QTextStream out(&saveFile);
+    while (!out.atEnd())
+      out.readLine();
+    out << toAdd;
   }
   saveFile.close();
 }
