@@ -20,13 +20,13 @@ void *get_in_addr(struct sockaddr *sa) {
 }
 
 // TODO: check malloc
-#define credid_api_log(api, _query, _success)                           \
+#define credid_api_log(api, _query, _status)                            \
   ({                                                                    \
     if (api->logs_enabled == 1) {                                       \
       credid_api_log_t *new_log = (credid_api_log_t*)malloc(sizeof(credid_api_log_t));     \
       credid_api_logs_link_t *new_link = (credid_api_logs_link_t*)malloc(sizeof(credid_api_logs_link_t)); \
       new_log->query = strdup(_query);                                  \
-      new_log->success = _success;                                      \
+      new_log->status = _status;                                        \
       new_link->line = new_log;                                         \
       new_link->next = NULL;                                            \
       if (api->logs_end != NULL)                                        \
@@ -51,13 +51,13 @@ void *get_in_addr(struct sockaddr *sa) {
     if (api->last_command_result != NULL) {                             \
       memset(api->last_command_result, 0, MAXDATASIZE);                 \
       if ((numbytes = recv(api->socket, api->last_command_result, MAXDATASIZE-1, 0)) == -1) { \
-        err = 1;                                                        \
+        err = 0xFF;                                                     \
       }                                                                 \
     }                                                                   \
     else {                                                              \
-      err = 2;                                                          \
+      err = 0xFE;                                                       \
     }                                                                   \
-    credid_api_log(api, cmd, err);                                      \
+    credid_api_log(api, cmd, err || credid_api_success(api) == 1 ? 0 : 1); \
     err;                                                                \
   })
 
@@ -66,7 +66,7 @@ char *credid_api_last_result(credid_api_t const *api) {
 }
 
 int credid_api_success(credid_api_t const *api) {
-  return strncmp(api->last_command_result, "success", 7) == 0;
+  return strncmp(api->last_command_result, "success", 7) == 0 ? 1 : 0;
 }
 
 int credid_api_auth(credid_api_t *api, char const *username, char const *password) {

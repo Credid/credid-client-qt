@@ -2,9 +2,13 @@
 
 #define MAXDATASIZE 4096
 
+/*
+ * The query is a malloc() allocated string
+ * The status is an int (0=success, 1=failure, other=network error)
+ */
 typedef struct credid_api_log_s {
   char  *query;
-  int   success;
+  int   status;
 } credid_api_log_t ;
 
 typedef struct credid_api_logs_link_s {
@@ -30,9 +34,9 @@ int credid_api_free(credid_api_t *api);
 int credid_api_success(credid_api_t const *api);
 
 /*
-  Get the last result (data after "success" or "failure").
-  This data is freed after each call to the API, you might need to copy it.
-*/
+ * Get the last result (data after "success" or "failure").
+ * This data is freed after each call to the API, you might need to copy it.
+ */
 char *credid_api_last_result(credid_api_t const *api);
 
 /* Send AUTH ids */
@@ -58,7 +62,9 @@ int credid_api_user_change_password(credid_api_t *api, char const *username, cha
 /* Enable or disable the logging (1 or 0) */
 int credid_api_setup_logs(credid_api_t *api, int enable);
 
-/* Return the first log of the logs (and remove it from the logs). The returned pointer must be freed with free(). */
+/* Return the first log of the logs (and remove it from the logs).
+ * The returned pointer must be freed with free().
+ */
 credid_api_log_t *credid_api_fetch_log(credid_api_t *api);
 
 /* Remove and free the logs. Called by credid_api_free() */

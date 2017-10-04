@@ -361,7 +361,7 @@ void MainWindow::addLog(bool userOp, std::string const &logPhrase) {
   credid_api_log_t *log;
   while ((log = credid_api_fetch_log(api)) != NULL) {
     QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] ";
-    if (log->success)
+    if (log->status)
       toAdd += "[ERROR] ";
     toAdd += log->query;
 
