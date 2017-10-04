@@ -76,6 +76,8 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
     ui->errorMessage->setText("");
   }
 
+  credid_api_setup_logs(api, 1);
+
   // Request list of users
   credid_api_user_list(api);
   listToDisplay(ui->listUsers);
@@ -353,29 +355,34 @@ void MainWindow::listToDisplay(QListWidget *dest, bool clear) {
 }
 
 void MainWindow::addLog(bool userOp) {
-//  QFile saveFile(QDir::homePath() + "/.local/logs");
-//  if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
-//    // Create file
-//    if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Text))
-//      return;
-//  }
+  QFile saveFile(QDir::homePath() + "/.local/logs");
+  if (!saveFile.open(QIODevice::ReadWrite | QIODevice::Text)) {
+    // Create file
+    if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Text))
+      return;
+  }
 
-//  std::string log;
-//  while ((log = credid_api_fetch_log(api)) != NULL) {
-//    QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] " + log;
+  credid_api_log_t *log;
+  while ((log = credid_api_fetch_log(api)) != NULL) {
+    QString toAdd = "[ " + QDate::currentDate().toString() + " " + QTime::currentTime().toString() + "] ";
+    if (log->success)
+      toAdd += "[ERROR] ";
+    toAdd += log->query;
 
-//    logsUi->getAllLogs()->addItem(toAdd);
-//    if (!userOp)
-//      logsUi->getLogs()->addItem(toAdd);
+    logsUi->getAllLogs()->addItem(toAdd);
+    if (!userOp)
+      logsUi->getLogs()->addItem(toAdd);
 
-//    // Add in log file
-//    QTextStream out(&saveFile);
-//    while (!out.atEnd()) {
-//      QString line = out.readLine();
-//      if (line == toAdd) // Avoid duplicates
-//        return;
-//    }
-//    out << toAdd;
-//  }
-//  saveFile.close();
+    // Add in log file
+    QTextStream out(&saveFile);
+    while (!out.atEnd()) {
+      QString line = out.readLine();
+      if (line == toAdd) // Avoid duplicates
+        return;
+    }
+    out << toAdd;
+    free(log->query);
+    free(log);
+  }
+  saveFile.close();
 }
