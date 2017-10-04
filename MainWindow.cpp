@@ -4,6 +4,7 @@
 #include <QTime>
 #include <QDir>
 #include <QTextStream>
+#include <QMessageBox>
 
 #include "MainWindow.hpp"
 #include "ui_MainWindow.h"
@@ -62,7 +63,7 @@ void MainWindow::initializeApi(QString const &host, QString const &port, QString
     ui->errorMessage->setText("");
   }
 
-  // credidenticate
+  // authenticate
   credid_api_auth(api, username.toStdString().c_str(), password.toStdString().c_str());
   if (!credid_api_success(api)) {
     ui->errorMessage->setText("credidentication failed: invalid username and/or password");
@@ -168,6 +169,8 @@ void MainWindow::addUser() {
 }
 
 void MainWindow::removeUser() {
+  if (QMessageBox::question( this, "Remove user", "Are you sure you want to remove this user?", QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Cancel)
+    return;
   ui->errorMessage->setText("");
   credid_api_user_remove(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   if (credid_api_success(api)) {
@@ -181,6 +184,8 @@ void MainWindow::removeUser() {
 }
 
 void MainWindow::changePassword() {
+  if (QMessageBox::question( this, "Change user password", "Are you sure you want to change this user's password?", QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Cancel)
+    return;
   ui->errorMessage->setText("");
   credid_api_user_change_password(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str(), ui->newPassword->text().toStdString().c_str());
   if (credid_api_success(api)) {
@@ -277,6 +282,8 @@ void MainWindow::addGroup() {
 }
 
 void MainWindow::removeGroup() {
+  if (QMessageBox::question( this, "Delete group", "Are you sure you want to delete this group?\nAll users belonging to this group will be removed from it.", QMessageBox::Yes, QMessageBox::Cancel) == QMessageBox::Cancel)
+    return;
   if (ui->listGroups->selectedItems().empty()) {
     ui->errorMessage->setText("Please select a group to delete");
     return;

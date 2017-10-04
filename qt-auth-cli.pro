@@ -27,7 +27,7 @@ SOURCES += \
         LogsWindow.cpp \
         main.cpp \
         MainWindow.cpp \
-        ConnectionDialog.cpp \
+        ConnectionDialog.cpp
 
 HEADERS += \
         credid-api.h \
@@ -38,6 +38,6 @@ HEADERS += \
 FORMS += \
         ConnectionDialog.ui \
         MainWindow.ui \
-        LogsWindow.ui \
+        LogsWindow.ui
 
 STATECHARTS +=
