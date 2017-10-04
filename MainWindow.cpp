@@ -111,6 +111,8 @@ void MainWindow::disconnect() {
     widget->clear();
   for (auto widget: ui->centralWidget->findChildren<QLineEdit*>())
     widget->clear();
+  ui->removeUser->setText("Delete user");
+  ui->removeGroup->setText("Delete group");
 }
 
 void MainWindow::openRFC() {
@@ -130,6 +132,7 @@ void MainWindow::displayUserInfo() {
   // Refill lists
   credid_api_user_list_groups(api, ui->listUsers->selectedItems().first()->text().toStdString().c_str());
   listToDisplay(ui->listUserGroups);
+  ui->removeUser->setText("Delete user " + ui->listUsers->selectedItems().first()->text());
   std::vector<QString> addedGroups;
   addedGroups.empty();
   // Only display in the "add group" box the groups the user is not in
@@ -234,6 +237,7 @@ void MainWindow::displayGroupInfo() {
   if (credid_api_success(api)) {
     // Update group list
     listToDisplay(ui->listGroupPermissions);
+    ui->removeGroup->setText("Delete group " + ui->listGroups->selectedItems().first()->text());
   } else {
     // Display error message
     ui->errorMessage->setText(credid_api_last_result(api));
